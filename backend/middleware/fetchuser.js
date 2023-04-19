@@ -1,5 +1,6 @@
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "IWantMyOwn$Kingdom";
+process.env.JWT_SECRET;
 
 const fetchuser = (req, res, next) => {
   //---------GET THE USER FROM THE JWT TOKEN AND ADD ID TO THE REQUEST OBJECT---------
@@ -10,7 +11,7 @@ const fetchuser = (req, res, next) => {
       .send({ error: "Please authenticate using the valid token " });
   }
   try {
-    const data = jwt.verify(token, JWT_SECRET);
+    const data = jwt.verify(token, process.env.JWT_SECRET);
     req.user = data.user;
     next();
   } catch (error) {

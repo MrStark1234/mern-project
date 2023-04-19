@@ -1,9 +1,7 @@
-const connectToMongo = require("./db");
 const express = require("express");
 const cors = require("cors");
-require ("dotenv").config()
-
-connectToMongo();
+require("dotenv").config();
+const mongoose = require("mongoose");
 
 const app = express();
 const port = process.env.port || 5000;
@@ -15,6 +13,15 @@ app.use(express.json());
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/notes", require("./routes/notes"));
 
-app.listen(port, () => {
-  console.log(`Cloud-Book backend is listening on port ${port}`);
-});
+mongoose
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("connected to MongoDB Atlas");
+  })
+  .then(() => {
+    app.listen(port, () => console.log(`Server is listening on port: ${port}`));
+  })
+  .catch((error) => console.log(`${error} did not connect`));
